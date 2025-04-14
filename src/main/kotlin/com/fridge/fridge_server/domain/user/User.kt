@@ -1,2 +1,18 @@
 package com.fridge.fridge_server.domain.user
 
+import com.fridge.fridge_server.domain.family.FamilyGroup
+import jakarta.persistence.*
+
+@Entity
+class User(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0,
+
+    val name: String,
+    val email: String,
+    val password: String, // hashed
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "family_group_id")
+    val familyGroup: FamilyGroup? = null,  // 가족 그룹 참조
+)
