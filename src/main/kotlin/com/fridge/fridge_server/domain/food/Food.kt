@@ -11,17 +11,17 @@ enum class StorageType {
 
 @Entity
 @Table(name = "food")
-data class Food(
+class Food(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    val name: String,
-    val expiryDate: LocalDate,
-    val count: Long,
-    val memo: String? = null,
+    var name: String,
+    var expiryDate: LocalDate,
+    var count: Long,
+    var memo: String? = null,
 
     @Enumerated(EnumType.STRING)  // enum 값을 문자열로 저장
-    val storageType: StorageType,
+    var storageType: StorageType,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fridge_id")

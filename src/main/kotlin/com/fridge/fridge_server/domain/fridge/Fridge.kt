@@ -7,7 +7,7 @@ import jakarta.persistence.*
 @Table(name = "fridge")
 class Fridge(
     @Id @GeneratedValue val id: Long = 0,
-    val name: String,
+    var name: String,
 
     @ManyToOne
     @JoinColumn(name = "family_group_id")
