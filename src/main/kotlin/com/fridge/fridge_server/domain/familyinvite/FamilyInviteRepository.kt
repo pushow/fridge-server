@@ -1,5 +1,6 @@
 package com.fridge.fridge_server.domain.familyinvite
 
+import com.fridge.fridge_server.domain.familyinvite.dto.InviteStatus
 import com.fridge.fridge_server.domain.user.User
 import org.springframework.data.jpa.repository.JpaRepository
 

@@ -1,6 +1,7 @@
 package com.fridge.fridge_server.domain.familyinvite
 
 import com.fridge.fridge_server.domain.family.FamilyGroupRepository
+import com.fridge.fridge_server.domain.familyinvite.dto.InviteStatus
 import com.fridge.fridge_server.domain.user.UserRepository
 import org.springframework.stereotype.Service
 
