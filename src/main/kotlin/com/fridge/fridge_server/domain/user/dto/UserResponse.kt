@@ -28,3 +28,15 @@ data class UserFridgeInfo(
     val id: Long,
     val name: String
 )
+
+data class UserSummaryResponse(
+    val id: Long,
+    val name: String,
+    val email: String
+) {
+    companion object {
+        fun from(user: User): UserSummaryResponse {
+            return UserSummaryResponse(user.id, user.name, user.email)
+        }
+    }
+}
