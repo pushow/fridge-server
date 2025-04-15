@@ -9,14 +9,21 @@ import com.fridge.fridge_server.domain.user.dto.UserLoginRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+
+interface UserUseCase {
+    fun createUser(dto: CreateUserRequest): User
+    fun login(dto: UserLoginRequest): User
+    fun getUserInfo(userId: Long): UserInfoResponse
+}
+
 @Service
 class UserService(
     private val userRepository: UserRepository,
     private val familyGroupService: FamilyGroupService,
     private val fridgeService: FridgeService
-) {
+) :UserUseCase{
     @Transactional
-    fun createUser(dto: CreateUserRequest): User {
+    override fun createUser(dto: CreateUserRequest): User {
         if (userRepository.existsByEmail(dto.email)) {
             throw IllegalArgumentException("이미 사용 중인 이메일입니다.")
         }
@@ -34,7 +41,7 @@ class UserService(
     }
 
     @Transactional(readOnly = true)
-    fun login(dto: UserLoginRequest): User {
+    override fun login(dto: UserLoginRequest): User {
         val user = userRepository.findByEmail(dto.email)
             ?: throw IllegalArgumentException("존재하지 않는 이메일입니다.")
 
@@ -46,7 +53,7 @@ class UserService(
     }
 
     @Transactional(readOnly = true)
-    fun getUserInfo(userId: Long): UserInfoResponse {
+    override fun getUserInfo(userId: Long): UserInfoResponse {
         val user = userRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("유저 없음") }
 

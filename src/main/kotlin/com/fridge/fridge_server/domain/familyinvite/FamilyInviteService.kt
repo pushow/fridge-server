@@ -4,14 +4,19 @@ import com.fridge.fridge_server.domain.family.FamilyGroupRepository
 import com.fridge.fridge_server.domain.user.UserRepository
 import org.springframework.stereotype.Service
 
+interface FamilyInviteUseCase {
+    fun sendInvite(fromFamilyId: Long, inviterName: String, toUserId: Long)
+    fun getPendingInvitesForUser(userId: Long): List<FamilyInvite>
+    fun acceptInvite(invitationId: Long, userId: Long)
+    fun declineInvite(invitationId: Long, userId: Long)
+}
 @Service
 class FamilyInviteService(
     private val inviteRepository: FamilyInviteRepository,
     private val userRepository: UserRepository,
     private val familyGroupRepository: FamilyGroupRepository
-) {
-
-    fun sendInvite(fromFamilyId: Long, inviterName: String, toUserId: Long) {
+):FamilyInviteUseCase {
+    override fun sendInvite(fromFamilyId: Long, inviterName: String, toUserId: Long) {
         val family = familyGroupRepository.findById(fromFamilyId)
             .orElseThrow { IllegalArgumentException("가족 그룹 없음") }
 
@@ -31,14 +36,14 @@ class FamilyInviteService(
         inviteRepository.save(invite)
     }
 
-    fun getPendingInvitesForUser(userId: Long): List<FamilyInvite> {
+    override fun getPendingInvitesForUser(userId: Long): List<FamilyInvite> {
         val user = userRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("유저 없음") }
 
         return inviteRepository.findAllByToUserAndStatus(user, InviteStatus.PENDING)
     }
 
-    fun acceptInvite(invitationId: Long, userId: Long) {
+    override fun acceptInvite(invitationId: Long, userId: Long) {
         val user = userRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("유저 없음") }
 
@@ -61,7 +66,7 @@ class FamilyInviteService(
         }
     }
 
-    fun declineInvite(invitationId: Long, userId: Long) {
+    override fun declineInvite(invitationId: Long, userId: Long) {
         val user = userRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("유저 없음") }
 

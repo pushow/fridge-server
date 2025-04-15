@@ -7,19 +7,26 @@ import com.fridge.fridge_server.domain.fridge.dto.CreateFridgeRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+interface FridgeUseCase {
+    fun getFridgesByFamilyGroup(familyGroup: FamilyGroup): List<Fridge>
+    fun createFridge(request: CreateFridgeRequest): Fridge
+    fun updateFridgeName(fridgeId: Long, name: String): Fridge
+    fun deleteFridge(fridgeId: Long)
+}
+
 @Service
 class FridgeService(
     private val fridgeRepository: FridgeRepository,
     private val foodRepository: FoodRepository,
     private val familyGroupRepository: FamilyGroupRepository
-) {
+):FridgeUseCase {
     @Transactional(readOnly = true)
-    fun getFridgesByFamilyGroup(familyGroup: FamilyGroup): List<Fridge> {
+    override fun getFridgesByFamilyGroup(familyGroup: FamilyGroup): List<Fridge> {
         return fridgeRepository.findAllByFamilyGroup(familyGroup)
     }
 
     @Transactional
-    fun createFridge(request: CreateFridgeRequest): Fridge {
+    override fun createFridge(request: CreateFridgeRequest): Fridge {
         val family = familyGroupRepository.findById(request.familyGroupId)
             .orElseThrow { IllegalArgumentException("가족 그룹 없음") }
 
@@ -28,7 +35,7 @@ class FridgeService(
     }
 
     @Transactional
-    fun updateFridgeName(fridgeId: Long, name: String): Fridge {
+    override fun updateFridgeName(fridgeId: Long, name: String): Fridge {
         val fridge = fridgeRepository.findById(fridgeId)
             .orElseThrow { IllegalArgumentException("냉장고 없음") }
 
@@ -37,7 +44,7 @@ class FridgeService(
     }
 
     @Transactional
-    fun deleteFridge(fridgeId: Long) {
+    override fun deleteFridge(fridgeId: Long) {
         val fridge = fridgeRepository.findById(fridgeId)
             .orElseThrow { IllegalArgumentException("냉장고 없음") }
 
