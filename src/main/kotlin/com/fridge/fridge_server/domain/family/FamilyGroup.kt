@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 
 
 @Entity
+@Table(name = "family_group")
 class FamilyGroup(
     @Id @GeneratedValue val id: Long = 0,
     val name: String,
