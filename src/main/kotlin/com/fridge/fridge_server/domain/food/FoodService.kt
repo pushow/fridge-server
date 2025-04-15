@@ -10,6 +10,7 @@ class FoodService(
     private val foodRepository: FoodRepository,
     private val fridgeRepository: FridgeRepository
 ) {
+    @Transactional
     fun createFood(request: CreateFoodRequest): Food {
         val fridge = fridgeRepository.findById(request.fridgeId)
             .orElseThrow { IllegalArgumentException("냉장고 없음") }
@@ -38,15 +39,13 @@ class FoodService(
         val food = foodRepository.findById(foodId)
             .orElseThrow { IllegalArgumentException("음식 없음") }
 
-        val updated = food.copy(
-            name = request.name,
-            expiryDate = request.expiryDate,
-            count = request.count,
-            memo = request.memo,
-            storageType = request.storageType
-        )
+        food.name = request.name
+        food.expiryDate = request.expiryDate
+        food.count = request.count
+        food.memo = request.memo
+        food.storageType = request.storageType
 
-        return foodRepository.save(updated)
+        return food
     }
 
     @Transactional
