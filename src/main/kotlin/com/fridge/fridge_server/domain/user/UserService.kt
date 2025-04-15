@@ -1,26 +1,42 @@
 package com.fridge.fridge_server.domain.user
 
+import com.fridge.fridge_server.domain.family.FamilyGroupService
+import com.fridge.fridge_server.domain.user.dto.CreateUserRequest
+import com.fridge.fridge_server.domain.user.dto.UserLoginRequest
 import org.springframework.stereotype.Service
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val familyGroupRepository: FamilyGroupRepository
+    private val familyGroupService: FamilyGroupService
 ) {
-    fun registerUser(name: String, email: String, password: String): User {
-        val user = User(name = name, email = email, password = encode(password))
+    fun createUser(dto: CreateUserRequest): User {
+        if (userRepository.existsByEmail(dto.email)) {
+            throw IllegalArgumentException("이미 사용 중인 이메일입니다.")
+        }
+
+        val family = familyGroupService.createDefaultGroupForUser(dto.name)
+
+        val user = User(
+            name = dto.name,
+            email = dto.email,
+            password = dto.password,
+            familyGroup = family
+        )
+
         return userRepository.save(user)
     }
 
-    fun joinFamilyGroup(userId: Long, familyGroupId: Long) {
-        val user = userRepository.findById(userId).orElseThrow()
-        val group = familyGroupRepository.findById(familyGroupId).orElseThrow()
-        val updated = user.copy(familyGroup = group)
-        userRepository.save(updated)
+    fun login(dto: UserLoginRequest): User {
+        val user = userRepository.findByEmail(dto.email)
+            ?: throw IllegalArgumentException("존재하지 않는 이메일입니다.")
+
+        if (user.password != dto.password) {
+            throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
+        }
+
+        return user
     }
 
-    private fun encode(raw: String): String {
-        // 비밀번호 해싱 로직 (예: BCrypt)
-        return raw // 임시
-    }
+
 }
