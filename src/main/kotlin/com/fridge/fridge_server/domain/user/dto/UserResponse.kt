@@ -2,14 +2,29 @@ package com.fridge.fridge_server.domain.user.dto
 
 import com.fridge.fridge_server.domain.user.User
 
-data class UserResponse(
+data class UserLoginResponse(
     val id: Long,
     val name: String,
-    val email: String
+    val email: String,
+    val familyGroupId: Long,
 ) {
     companion object {
-        fun from(user: User): UserResponse {
-            return UserResponse(user.id, user.name, user.email)
+        fun from(user: User): UserLoginResponse {
+            return UserLoginResponse(user.id, user.name, user.email, user.familyGroup!!.id)
         }
     }
 }
+
+data class UserInfoResponse(
+    val userId: Long,
+    val userName: String,
+    val email: String,
+    val familyGroupId: Long,
+    val familyGroupName: String,
+    val fridges: List<UserFridgeInfo>
+)
+
+data class UserFridgeInfo(
+    val id: Long,
+    val name: String
+)

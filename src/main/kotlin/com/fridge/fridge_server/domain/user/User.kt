@@ -15,5 +15,9 @@ class User(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "family_group_id")
-    val familyGroup: FamilyGroup? = null,  // 가족 그룹 참조
-)
+    var familyGroup: FamilyGroup,  // 가족 그룹 참조
+){
+    fun changeFamilyGroup(newFamilyGroup: FamilyGroup) {
+        this.familyGroup = newFamilyGroup
+    }
+}
