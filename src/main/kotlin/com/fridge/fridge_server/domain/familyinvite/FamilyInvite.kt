@@ -1,6 +1,7 @@
 package com.fridge.fridge_server.domain.familyinvite
 
 import com.fridge.fridge_server.domain.family.FamilyGroup
+import com.fridge.fridge_server.domain.familyinvite.dto.InviteStatus
 import com.fridge.fridge_server.domain.user.User
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -26,9 +27,3 @@ class FamilyInvite(
 
     val invitedAt: LocalDateTime = LocalDateTime.now()
 )
-
-enum class InviteStatus {
-    PENDING,
-    ACCEPTED,
-    DECLINED
-}
