@@ -4,6 +4,7 @@ import com.fridge.fridge_server.domain.family.FamilyGroup
 import jakarta.persistence.*
 
 @Entity
+@Table(name = "fridge")
 class Fridge(
     @Id @GeneratedValue val id: Long = 0,
     val name: String,

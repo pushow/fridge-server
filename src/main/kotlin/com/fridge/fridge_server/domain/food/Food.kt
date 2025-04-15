@@ -10,6 +10,7 @@ enum class StorageType {
 }
 
 @Entity
+@Table(name = "food")
 data class Food(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
