@@ -1,14 +1,19 @@
 package com.fridge.fridge_server.endpoint
 
+import com.fridge.fridge_server.domain.auth.CurrentUser.CurrentUser
+import com.fridge.fridge_server.domain.auth.UserPrincipal
 import com.fridge.fridge_server.domain.familyinvite.FamilyInviteService
 import com.fridge.fridge_server.domain.familyinvite.dto.FamilyInviteRequest
 import com.fridge.fridge_server.domain.familyinvite.dto.FamilyInviteResponse
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/invites")
+@SecurityRequirement(name = "bearerAuth")
 class FamilyInviteEndpoint(
     private val familyInviteService: FamilyInviteService
 ) {
@@ -27,7 +32,8 @@ class FamilyInviteEndpoint(
     // 유저가 받은 초대 목록 조회
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    fun getMyInvites(@RequestParam userId: Long): List<FamilyInviteResponse> {
+    fun getMyInvites(@Parameter(hidden = true) @CurrentUser user: UserPrincipal): List<FamilyInviteResponse> {
+        val userId = user.getUser().id
         val invites = familyInviteService.getPendingInvitesForUser(userId)
         return invites.map { FamilyInviteResponse.from(it) }
     }

@@ -4,11 +4,13 @@ import com.fridge.fridge_server.domain.fridge.FridgeService
 import com.fridge.fridge_server.domain.fridge.dto.CreateFridgeRequest
 import com.fridge.fridge_server.domain.fridge.dto.FridgeResponse
 import com.fridge.fridge_server.domain.fridge.dto.UpdateFridgeRequest
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/fridges")
+@SecurityRequirement(name = "bearerAuth")
 class FridgeEndpoint(
     private val fridgeService: FridgeService
 ) {

@@ -4,11 +4,13 @@ import com.fridge.fridge_server.domain.food.FoodService
 import com.fridge.fridge_server.domain.food.dto.CreateFoodRequest
 import com.fridge.fridge_server.domain.food.dto.FoodResponse
 import com.fridge.fridge_server.domain.food.dto.UpdateFoodRequest
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/foods")
+@SecurityRequirement(name = "bearerAuth")
 class FoodEndpoint(
     private val foodService: FoodService
 ) {

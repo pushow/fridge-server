@@ -3,11 +3,13 @@ package com.fridge.fridge_server.endpoint
 import com.fridge.fridge_server.domain.family.FamilyGroupService
 import com.fridge.fridge_server.domain.family.dto.UpdateFamilyGroupRequest
 import com.fridge.fridge_server.domain.user.dto.UserSummaryResponse
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/family-groups")
+@SecurityRequirement(name = "bearerAuth")
 class FamilyGroupEndpoint(private val familyGroupService: FamilyGroupService) {
     @GetMapping("/{familyId}/members")
     @ResponseStatus(HttpStatus.OK)
