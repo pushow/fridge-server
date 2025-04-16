@@ -35,7 +35,8 @@ class SecurityConfig(
                     "/auth/**",
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
-                    "/swagger-ui.html").permitAll() // 로그인, 리프레시 등은 인증 없이
+                    "/swagger-ui.html",
+                    "/h2-console/**").permitAll() // 로그인, 리프레시 등은 인증 없이
                     .anyRequest().authenticated()              // 그 외는 인증 필요
             }
             .userDetailsService(userDetailsService)
