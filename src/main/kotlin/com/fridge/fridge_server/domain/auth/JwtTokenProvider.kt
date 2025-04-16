@@ -34,10 +34,8 @@ class JwtTokenProvider(
 
     fun isValid(token: String): Boolean = try {
         val claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token)
-        println("✅ JWT 유효: ${claims.body}")
         !claims.body.expiration.before(Date())
     } catch (e: Exception) {
-        println("❌ JWT 유효성 실패: ${e.message}")
         false
     }
 

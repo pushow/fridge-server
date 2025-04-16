@@ -23,9 +23,7 @@ class JwtAuthenticationFilter(
         filterChain: FilterChain
     ) {
         val token = resolveToken(request)
-        println("🔍 추출된 토큰: $token")
         if (token != null && jwtTokenProvider.isValid(token)) {
-            println("✅ 토큰 유효. 인증 객체 등록 시작")
             val userId = jwtTokenProvider.getUserId(token)
             val userDetails = userDetailsService.loadUserByUsername(userId.toString())
 
@@ -34,12 +32,7 @@ class JwtAuthenticationFilter(
             )
             authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
             SecurityContextHolder.getContext().authentication = authentication
-            println("✅ 인증 완료. SecurityContext에 등록됨: ${userDetails.username}")
-        }else {
-            println("❌ 토큰이 없거나 유효하지 않음")
         }
-
-
         filterChain.doFilter(request, response)
     }
 
