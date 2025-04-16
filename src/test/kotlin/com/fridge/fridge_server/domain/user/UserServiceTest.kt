@@ -3,6 +3,7 @@ package com.fridge.fridge_server.domain.user
 import com.fridge.fridge_server.domain.user.dto.CreateUserRequest
 import com.fridge.fridge_server.domain.family.FamilyGroupRepository
 import com.fridge.fridge_server.domain.fridge.FridgeService
+import com.fridge.fridge_server.domain.user.dto.UpdateUserRequest
 import com.fridge.fridge_server.domain.user.dto.UserInfoResponse
 import com.fridge.fridge_server.domain.user.dto.UserLoginRequest
 import org.junit.jupiter.api.Assertions.*
@@ -130,5 +131,38 @@ class UserServiceTest @Autowired constructor(
         assertEquals(user.familyGroup.name, info.familyGroupName)
         assertEquals(1, info.fridges.size)
         assertEquals("테스트 냉장고", info.fridges.first().name)
+    }
+
+    @Test
+    fun `유저 이름만 수정하면 변경된 이름이 반영된다`() {
+        // given
+        val user = userService.createUser(
+            CreateUserRequest("수정전", "edit@test.com", "oldpass")
+        )
+
+        val request = UpdateUserRequest(name = "수정후")
+
+        // when
+        val updated = userService.updateUser(user.id, request)
+
+        // then
+        assertEquals("수정후", updated.name)
+        assertEquals("edit@test.com", updated.email)  // 변경 X
+        assertEquals("oldpass", updated.password)     // 변경 X
+    }
+
+    @Test
+    fun `유저를 삭제하면 더 이상 조회할 수 없다`() {
+        // given
+        val user = userService.createUser(
+            CreateUserRequest("삭제유저", "delete@test.com", "pass")
+        )
+
+        // when
+        userService.deleteUser(user.id)
+
+        // then
+        val found = userRepository.findById(user.id)
+        assertTrue(found.isEmpty)
     }
 }
