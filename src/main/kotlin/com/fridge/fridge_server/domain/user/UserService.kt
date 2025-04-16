@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional
 
 
 interface UserUseCase {
-    fun createUser(dto: CreateUserRequest)
-    fun login(dto: UserLoginRequest): User
+    fun isEmailAvailable(email: String): Boolean
+    fun createUser(dto: CreateUserRequest):User
     fun getUserInfo(userId: Long): UserInfoResponse
     fun updateUser(userId: Long, request: UpdateUserRequest): User
     fun deleteUser(userId: Long)
@@ -23,11 +23,17 @@ class UserService(
     private val fridgeService: FridgeService,
     private val passwordEncoder: PasswordEncoder
 ) :UserUseCase{
-    @Transactional
-    override fun createUser(dto: CreateUserRequest) {
-        if (userRepository.existsByEmail(dto.email)) {
+    @Transactional(readOnly = true)
+    override fun isEmailAvailable(email: String): Boolean {
+        if (userRepository.existsByEmail(email)) {
             throw IllegalArgumentException("이미 사용 중인 이메일입니다.")
         }
+        else return true;
+    }
+
+    @Transactional
+    override fun createUser(dto: CreateUserRequest) : User {
+        isEmailAvailable(dto.email)
         val encodedPassword = passwordEncoder.encode(dto.password)
         val family = familyGroupService.createDefaultGroupForUser(dto.name)
 
@@ -38,19 +44,7 @@ class UserService(
             familyGroup = family
         )
 
-        userRepository.save(user)
-    }
-
-    @Transactional(readOnly = true)
-    override fun login(dto: UserLoginRequest): User {
-        val user = userRepository.findByEmail(dto.email)
-            ?: throw IllegalArgumentException("존재하지 않는 이메일입니다.")
-
-        if (user.password != dto.password) {
-            throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
-        }
-
-        return user
+        return userRepository.save(user)
     }
 
     @Transactional(readOnly = true)
