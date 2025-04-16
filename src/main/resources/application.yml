@@ -37,3 +37,8 @@ springdoc:
 
 server:
   address: 0.0.0.0
+
+jwt:
+  secret: mysecretkeythatishardtoguessandlongenough123
+  access-exp: 900000        # 15분 (ms 단위)
+  refresh-exp: 1209600000   # 14일 (ms 단위)

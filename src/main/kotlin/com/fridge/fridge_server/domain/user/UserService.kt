@@ -3,12 +3,13 @@ package com.fridge.fridge_server.domain.user
 import com.fridge.fridge_server.domain.family.FamilyGroupService
 import com.fridge.fridge_server.domain.fridge.FridgeService
 import com.fridge.fridge_server.domain.user.dto.*
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 
 interface UserUseCase {
-    fun createUser(dto: CreateUserRequest): User
+    fun createUser(dto: CreateUserRequest)
     fun login(dto: UserLoginRequest): User
     fun getUserInfo(userId: Long): UserInfoResponse
     fun updateUser(userId: Long, request: UpdateUserRequest): User
@@ -19,24 +20,25 @@ interface UserUseCase {
 class UserService(
     private val userRepository: UserRepository,
     private val familyGroupService: FamilyGroupService,
-    private val fridgeService: FridgeService
+    private val fridgeService: FridgeService,
+    private val passwordEncoder: PasswordEncoder
 ) :UserUseCase{
     @Transactional
-    override fun createUser(dto: CreateUserRequest): User {
+    override fun createUser(dto: CreateUserRequest) {
         if (userRepository.existsByEmail(dto.email)) {
             throw IllegalArgumentException("이미 사용 중인 이메일입니다.")
         }
-
+        val encodedPassword = passwordEncoder.encode(dto.password)
         val family = familyGroupService.createDefaultGroupForUser(dto.name)
 
         val user = User(
             name = dto.name,
             email = dto.email,
-            password = dto.password,
+            password = encodedPassword,
             familyGroup = family
         )
 
-        return userRepository.save(user)
+        userRepository.save(user)
     }
 
     @Transactional(readOnly = true)

@@ -1,5 +1,7 @@
 package com.fridge.fridge_server.endpoint
 
+import com.fridge.fridge_server.domain.auth.CurrentUser.CurrentUser
+import com.fridge.fridge_server.domain.auth.UserPrincipal
 import com.fridge.fridge_server.domain.user.UserService
 import com.fridge.fridge_server.domain.user.dto.*
 import org.springframework.http.HttpStatus
@@ -10,22 +12,9 @@ import org.springframework.web.bind.annotation.*
 class UserEndpoint(
     private val userService: UserService
 ) {
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    fun createUser(@RequestBody dto: CreateUserRequest){
-        userService.createUser(dto)
-    }
-
-    @PostMapping("/login")
-    @ResponseStatus(HttpStatus.OK)
-    fun login(@RequestBody request: UserLoginRequest): UserLoginResponse {
-        val user = userService.login(request)
-        return UserLoginResponse.from(user)
-    }
-
     @GetMapping("/me")
-    @ResponseStatus(HttpStatus.OK)
-    fun getMyInfo(@RequestParam userId: Long): UserInfoResponse {
+    fun getMyInfo(@CurrentUser user: UserPrincipal): UserInfoResponse {
+        val userId = user.getUser().id!!
         return userService.getUserInfo(userId)
     }
 
