@@ -2,10 +2,7 @@ package com.fridge.fridge_server.domain.user
 
 import com.fridge.fridge_server.domain.family.FamilyGroupService
 import com.fridge.fridge_server.domain.fridge.FridgeService
-import com.fridge.fridge_server.domain.user.dto.CreateUserRequest
-import com.fridge.fridge_server.domain.user.dto.UserFridgeInfo
-import com.fridge.fridge_server.domain.user.dto.UserInfoResponse
-import com.fridge.fridge_server.domain.user.dto.UserLoginRequest
+import com.fridge.fridge_server.domain.user.dto.*
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,6 +11,8 @@ interface UserUseCase {
     fun createUser(dto: CreateUserRequest): User
     fun login(dto: UserLoginRequest): User
     fun getUserInfo(userId: Long): UserInfoResponse
+    fun updateUser(userId: Long, request: UpdateUserRequest): User
+    fun deleteUser(userId: Long)
 }
 
 @Service
@@ -69,6 +68,24 @@ class UserService(
             familyGroupName = family.name,
             fridges = fridges.map { UserFridgeInfo(it.id, it.name) }
         )
+    }
+
+    @Transactional
+    override fun updateUser(userId: Long, request: UpdateUserRequest): User {
+        val user = userRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("유저 없음") }
+
+        user.name = request.name
+
+        return user
+    }
+
+    @Transactional
+    override fun deleteUser(userId: Long) {
+        val user = userRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("유저 없음") }
+
+        userRepository.delete(user)
     }
 
 }

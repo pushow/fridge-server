@@ -10,3 +10,7 @@ data class UserLoginRequest(
     val email: String,
     val password: String
 )
+
+data class UpdateUserRequest(
+    val name: String,
+)

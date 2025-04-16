@@ -1,10 +1,7 @@
 package com.fridge.fridge_server.endpoint
 
 import com.fridge.fridge_server.domain.user.UserService
-import com.fridge.fridge_server.domain.user.dto.CreateUserRequest
-import com.fridge.fridge_server.domain.user.dto.UserInfoResponse
-import com.fridge.fridge_server.domain.user.dto.UserLoginRequest
-import com.fridge.fridge_server.domain.user.dto.UserLoginResponse
+import com.fridge.fridge_server.domain.user.dto.*
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -30,5 +27,21 @@ class UserEndpoint(
     @ResponseStatus(HttpStatus.OK)
     fun getMyInfo(@RequestParam userId: Long): UserInfoResponse {
         return userService.getUserInfo(userId)
+    }
+
+    @PutMapping("/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    fun updateUser(
+        @PathVariable userId: Long,
+        @RequestBody request: UpdateUserRequest
+    ): UserLoginResponse {
+        val updated = userService.updateUser(userId, request)
+        return UserLoginResponse.from(updated)
+    }
+
+    @DeleteMapping("/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteUser(@PathVariable userId: Long) {
+        userService.deleteUser(userId)
     }
 }
