@@ -49,11 +49,12 @@ class FamilyGroupService(
         val remaining = userRepository.findAll()
             .filter { it.familyGroup == oldFamily && it.id != user.id }
 
-        // 유저를 null 그룹으로 전환 (또는 새로운 그룹 생성도 가능)
+        // 새로운 가족 생성 및 이동
         val newFamily = createDefaultGroupForUser(user.name)
         user.changeFamilyGroup(newFamily)
 
-        // 구성원이 0명이면 삭제
+        userRepository.save(user)
+
         if (remaining.isEmpty()) {
             familyGroupRepository.delete(oldFamily)
         }

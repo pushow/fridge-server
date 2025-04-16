@@ -9,9 +9,9 @@ class User(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    val name: String,
+    var name: String,
     val email: String,
-    val password: String, // hashed
+    var password: String, // hashed
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "family_group_id")

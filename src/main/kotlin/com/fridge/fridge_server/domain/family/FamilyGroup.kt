@@ -11,7 +11,7 @@ class FamilyGroup(
     @Id @GeneratedValue val id: Long = 0,
     var name: String,
 
-    @OneToMany(mappedBy = "familyGroup", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "familyGroup")
     val users: List<User> = mutableListOf(),
 
     @OneToMany(mappedBy = "familyGroup", cascade = [CascadeType.ALL], orphanRemoval = true)
