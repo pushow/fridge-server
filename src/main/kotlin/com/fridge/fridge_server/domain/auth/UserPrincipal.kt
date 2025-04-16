@@ -19,4 +19,5 @@ class UserPrincipal(
     override fun isEnabled() = true
 
     fun getUser(): User = user
+    fun getFamilyId(): Long = user.familyGroup.id
 }
