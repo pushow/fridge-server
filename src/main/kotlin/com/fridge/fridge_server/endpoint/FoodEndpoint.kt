@@ -1,5 +1,6 @@
 package com.fridge.fridge_server.endpoint
 
+import com.fridge.fridge_server.domain.food.Food
 import com.fridge.fridge_server.domain.food.FoodService
 import com.fridge.fridge_server.domain.food.dto.CreateFoodRequest
 import com.fridge.fridge_server.domain.food.dto.FoodResponse
@@ -17,8 +18,8 @@ class FoodEndpoint(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createFood(@RequestBody request: CreateFoodRequest) {
-        foodService.createFood(request)
+    fun createFood(@RequestBody request: CreateFoodRequest) : Food{
+        return foodService.createFood(request)
     }
 
     @GetMapping

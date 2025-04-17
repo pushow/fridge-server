@@ -1,9 +1,12 @@
 package com.fridge.fridge_server.endpoint
 
+import com.fridge.fridge_server.domain.auth.CurrentUser.CurrentUser
+import com.fridge.fridge_server.domain.auth.UserPrincipal
 import com.fridge.fridge_server.domain.fridge.FridgeService
 import com.fridge.fridge_server.domain.fridge.dto.CreateFridgeRequest
 import com.fridge.fridge_server.domain.fridge.dto.FridgeResponse
 import com.fridge.fridge_server.domain.fridge.dto.UpdateFridgeRequest
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -14,11 +17,13 @@ import org.springframework.web.bind.annotation.*
 class FridgeEndpoint(
     private val fridgeService: FridgeService
 ) {
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createFridge(@RequestBody request: CreateFridgeRequest): FridgeResponse {
-        val fridge = fridgeService.createFridge(request)
+    fun createFridge(
+        @Parameter(hidden = true) @CurrentUser user: UserPrincipal,
+        @RequestParam name: String
+    ): FridgeResponse {
+        val fridge = fridgeService.createFridge(name, user.getFamilyId())
         return FridgeResponse.from(fridge)
     }
 
