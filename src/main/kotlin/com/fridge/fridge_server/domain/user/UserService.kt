@@ -6,7 +6,8 @@ import com.fridge.fridge_server.domain.user.dto.*
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-
+import com.fridge.fridge_server.common.CustomException
+import com.fridge.fridge_server.common.ErrorCode
 
 interface UserUseCase {
     fun isEmailAvailable(email: String): Boolean
@@ -26,7 +27,7 @@ class UserService(
     @Transactional(readOnly = true)
     override fun isEmailAvailable(email: String): Boolean {
         if (userRepository.existsByEmail(email)) {
-            throw IllegalArgumentException("이미 사용 중인 이메일입니다.")
+            throw CustomException(ErrorCode.EMAIL_ALREADY_EXISTS)
         }
         else return true;
     }
@@ -50,7 +51,7 @@ class UserService(
     @Transactional(readOnly = true)
     override fun getUserInfo(userId: Long): UserInfoResponse {
         val user = userRepository.findById(userId)
-            .orElseThrow { IllegalArgumentException("유저 없음") }
+            .orElseThrow {  CustomException(ErrorCode.USER_NOT_FOUND) }
 
         val family = user.familyGroup
 
@@ -69,7 +70,7 @@ class UserService(
     @Transactional
     override fun updateUser(userId: Long, request: UpdateUserRequest): User {
         val user = userRepository.findById(userId)
-            .orElseThrow { IllegalArgumentException("유저 없음") }
+            .orElseThrow { CustomException(ErrorCode.USER_NOT_FOUND) }
 
         user.name = request.name
 
@@ -79,7 +80,7 @@ class UserService(
     @Transactional
     override fun deleteUser(userId: Long) {
         val user = userRepository.findById(userId)
-            .orElseThrow { IllegalArgumentException("유저 없음") }
+            .orElseThrow { CustomException(ErrorCode.USER_NOT_FOUND) }
 
         userRepository.delete(user)
     }

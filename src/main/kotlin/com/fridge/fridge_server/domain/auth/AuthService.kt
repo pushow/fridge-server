@@ -10,6 +10,10 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
+import com.fridge.fridge_server.common.CustomException
+import com.fridge.fridge_server.common.ErrorCode
+
+
 @Service
 class AuthService(
     private val userRepository: UserRepository,
@@ -20,18 +24,18 @@ class AuthService(
 
     fun login(request: LoginRequest): TokenResponse {
         val user = userRepository.findByEmail(request.email)
-            ?: throw IllegalArgumentException("존재하지 않는 이메일입니다.")
+            ?: throw CustomException(ErrorCode.LOGIN_FAILED)
 
         if (!passwordEncoder.matches(request.password, user.password)) {
-            throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
+            throw CustomException(ErrorCode.LOGIN_FAILED)
         }
 
-        val accessToken = jwtTokenProvider.createAccessToken(user.id!!)
+        val accessToken = jwtTokenProvider.createAccessToken(user.id)
         val refreshToken = jwtTokenProvider.createRefreshToken(user.id)
 
-        // 기존 토큰이 있으면 갱신, 없으면 새로 저장
         val expiry = LocalDateTime.now().plusSeconds(jwtTokenProvider.refreshExpSeconds())
         val saved = refreshTokenRepository.findById(user.id)
+
         if (saved.isPresent) {
             val token = saved.get()
             token.token = refreshToken
@@ -47,10 +51,10 @@ class AuthService(
 
     fun reissue(request: TokenReissueRequest): TokenResponse {
         val stored = refreshTokenRepository.findByToken(request.refreshToken)
-            ?: throw IllegalArgumentException("유효하지 않은 리프레시 토큰입니다.")
+            ?: throw CustomException(ErrorCode.REFRESH_TOKEN_INVALID)
 
         if (stored.expiryDate.isBefore(LocalDateTime.now())) {
-            throw IllegalArgumentException("리프레시 토큰이 만료되었습니다.")
+            throw CustomException(ErrorCode.REFRESH_TOKEN_EXPIRED)
         }
 
         val newAccessToken = jwtTokenProvider.createAccessToken(stored.userId)
