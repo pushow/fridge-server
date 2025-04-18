@@ -1,6 +1,7 @@
 package com.fridge.fridge_server.domain.fridge
 
 import com.fridge.fridge_server.domain.family.FamilyGroup
+import com.fridge.fridge_server.domain.food.Food
 import jakarta.persistence.*
 
 @Entity
@@ -13,5 +14,8 @@ class Fridge(
 
     @ManyToOne
     @JoinColumn(name = "family_group_id")
-    val familyGroup: FamilyGroup
+    val familyGroup: FamilyGroup,
+
+    @OneToMany(mappedBy = "fridge", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val foods: List<Food> = mutableListOf()
 )
