@@ -6,7 +6,9 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "fridge")
 class Fridge(
-    @Id @GeneratedValue val id: Long = 0,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0,
     var name: String,
 
     @ManyToOne
