@@ -24,9 +24,8 @@ class FridgeServiceTest @Autowired constructor(
     @Test
     fun `냉장고를 생성하면 가족 그룹에 저장된다`() {
         val user = createFamilyUser()
-        val request = CreateFridgeRequest(user.familyGroup.id, "우리집 냉장고")
 
-        val fridge = fridgeService.createFridge(request)
+        val fridge = fridgeService.createFridge("우리집 냉장고", user.id)
 
         assertEquals("우리집 냉장고", fridge.name)
         assertEquals(user.familyGroup.id, fridge.familyGroup.id)
@@ -36,7 +35,8 @@ class FridgeServiceTest @Autowired constructor(
     fun `냉장고 이름을 변경할 수 있다`() {
         val user = createFamilyUser()
         val fridge = fridgeService.createFridge(
-            CreateFridgeRequest(user.familyGroup.id, "변경 전")
+            "변경 전",
+            user.familyGroup.id
         )
 
         val updated = fridgeService.updateFridgeName(fridge.id, "변경 후")
@@ -48,7 +48,8 @@ class FridgeServiceTest @Autowired constructor(
     fun `냉장고를 삭제하면 음식도 함께 삭제된다`() {
         val user = createFamilyUser()
         val fridge = fridgeService.createFridge(
-            CreateFridgeRequest(user.familyGroup.id, "삭제 냉장고")
+            "삭제 냉장고",
+            user.familyGroup.id
         )
 
         // 삭제해도 예외 안 나고 정상 삭제되면 성공

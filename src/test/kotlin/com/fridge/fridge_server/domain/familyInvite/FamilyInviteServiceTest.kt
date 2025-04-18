@@ -35,7 +35,7 @@ class FamilyInviteServiceTest @Autowired constructor(
         familyInviteService.sendInvite(
             fromFamilyId = from.familyGroup.id,
             inviterName = from.name,
-            toUserId = to.id
+            toUserEmail = to.email
         )
 
         val invites = familyInviteRepository.findAllByToUserAndStatus(to, InviteStatus.PENDING)
@@ -50,7 +50,7 @@ class FamilyInviteServiceTest @Autowired constructor(
         val to = createUser("수락자", "to2@test.com")
         val oldFamilyId = to.familyGroup.id
 
-        familyInviteService.sendInvite(from.familyGroup.id, from.name, to.id)
+        familyInviteService.sendInvite(from.familyGroup.id, from.name, to.email)
         val invite = familyInviteRepository.findAllByToUserAndStatus(to, InviteStatus.PENDING).first()
 
         familyInviteService.acceptInvite(invite.id, to.id)
@@ -68,7 +68,7 @@ class FamilyInviteServiceTest @Autowired constructor(
         val from = createUser("초대자", "from3@test.com")
         val to = createUser("거절자", "to3@test.com")
 
-        familyInviteService.sendInvite(from.familyGroup.id, from.name, to.id)
+        familyInviteService.sendInvite(from.familyGroup.id, from.name, to.email)
         val invite = familyInviteRepository.findAllByToUserAndStatus(to, InviteStatus.PENDING).first()
 
         familyInviteService.declineInvite(invite.id, to.id)
@@ -82,10 +82,10 @@ class FamilyInviteServiceTest @Autowired constructor(
         val from = createUser("초대자", "from4@test.com")
         val to = createUser("중복자", "to4@test.com")
 
-        familyInviteService.sendInvite(from.familyGroup.id, from.name, to.id)
+        familyInviteService.sendInvite(from.familyGroup.id, from.name, to.email)
 
         val exception = assertThrows(IllegalStateException::class.java) {
-            familyInviteService.sendInvite(from.familyGroup.id, from.name, to.id)
+            familyInviteService.sendInvite(from.familyGroup.id, from.name, to.email)
         }
 
         assertEquals("이미 초대가 존재합니다.", exception.message)

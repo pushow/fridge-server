@@ -23,7 +23,7 @@ class FoodServiceTest @Autowired constructor(
 
     fun setup(): Long {
         val user = userService.createUser(CreateUserRequest("푸드유저", "food@test.com", "1234"))
-        val fridge = fridgeService.createFridge(CreateFridgeRequest(user.familyGroup.id, "테스트 냉장고"))
+        val fridge = fridgeService.createFridge("테스트 냉장고", user.id)
         return fridge.id
     }
 
