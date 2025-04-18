@@ -29,21 +29,26 @@ class SecurityConfig(
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
+            .headers { it.frameOptions { frame -> frame.sameOrigin() } }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+
             .authorizeHttpRequests {
                 it.requestMatchers(
                     "/auth/**",
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
-                    "/h2-console/**").permitAll() // 로그인, 리프레시 등은 인증 없이
-                    .anyRequest().authenticated()              // 그 외는 인증 필요
+                    "/h2-console/**"
+                ).permitAll()
+                    .anyRequest().authenticated()
             }
+
             .userDetailsService(userDetailsService)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
     }
+
 
     @Bean
     fun authenticationManager(authConfig: AuthenticationConfiguration): AuthenticationManager =
