@@ -28,7 +28,8 @@ class FamilyInviteEndpoint(
     ) : FamilyInvite {
         return familyInviteService.sendInvite(
             fromFamilyId = user.getFamilyId(),
-            inviterName = user.username,
+            inviterName = user.getUser().name,
+            inviterEmail = user.getUser().email,
             toUserEmail = email
         )
     }
