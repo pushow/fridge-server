@@ -9,6 +9,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
+import com.fridge.fridge_server.domain.auth.CurrentUser.CurrentUser
+import com.fridge.fridge_server.domain.auth.UserPrincipal
+import io.swagger.v3.oas.annotations.Parameter
+
 @RestController
 @RequestMapping("/foods")
 @SecurityRequirement(name = "bearerAuth")
@@ -26,6 +30,14 @@ class FoodEndpoint(
     @ResponseStatus(HttpStatus.OK)
     fun getFoods(@RequestParam fridgeId: Long): List<FoodResponse> {
         return foodService.getFoodsByFridge(fridgeId).map { FoodResponse.from(it) }
+    }
+
+    @GetMapping("/group")
+    @ResponseStatus(HttpStatus.OK)
+    fun getFoodsByGroup(@Parameter(hidden = true) @CurrentUser user: UserPrincipal): List<FoodResponse> {
+        val groupId = user.getFamilyId()
+        val foods = foodService.getFoodsByFamilyGroup(groupId)
+        return foods.map { FoodResponse.from(it) }
     }
 
     @PutMapping("/{foodId}")
