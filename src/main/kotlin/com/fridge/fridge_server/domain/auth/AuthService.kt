@@ -64,4 +64,8 @@ class AuthService(
 
         return TokenResponse(accessToken = newAccessToken, refreshToken = newRefreshToken)
     }
+
+    fun logout(userId: Long) {
+        refreshTokenRepository.deleteById(userId)
+    }
 }
