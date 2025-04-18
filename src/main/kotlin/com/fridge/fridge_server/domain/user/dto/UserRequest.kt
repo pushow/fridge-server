@@ -14,3 +14,8 @@ data class UserLoginRequest(
 data class UpdateUserRequest(
     val name: String,
 )
+
+data class ChangePasswordRequest(
+    val currentPassword: String,
+    val newPassword: String
+)

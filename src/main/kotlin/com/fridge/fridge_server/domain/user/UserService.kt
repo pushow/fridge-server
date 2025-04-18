@@ -14,6 +14,7 @@ interface UserUseCase {
     fun createUser(dto: CreateUserRequest):User
     fun getUserInfo(userId: Long): UserInfoResponse
     fun updateUser(userId: Long, request: UpdateUserRequest): User
+    fun changePassword(userId: Long, request: ChangePasswordRequest)
     fun deleteUser(userId: Long)
 }
 
@@ -65,6 +66,18 @@ class UserService(
             familyGroupName = family.name,
             fridges = fridges.map { UserFridgeInfo(it.id, it.name) }
         )
+    }
+
+    @Transactional
+    override fun changePassword(userId: Long, request: ChangePasswordRequest) {
+        val user = userRepository.findById(userId)
+            .orElseThrow { CustomException(ErrorCode.USER_NOT_FOUND) }
+
+        if (!passwordEncoder.matches(request.currentPassword, user.password)) {
+            throw CustomException(ErrorCode.WRONG_PASSWORD)
+        }
+
+        user.password = passwordEncoder.encode(request.newPassword)
     }
 
     @Transactional

@@ -32,10 +32,21 @@ class UserEndpoint(
         return UserLoginResponse.from(updated)
     }
 
+    @PostMapping("/change-password")
+    @ResponseStatus(HttpStatus.OK)
+    fun changePassword(
+        @Parameter(hidden = true) @CurrentUser user: UserPrincipal,
+        @RequestBody request: ChangePasswordRequest
+    ) {
+        userService.changePassword(user.getUser().id, request)
+    }
+
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteUser(@Parameter(hidden = true) @CurrentUser user: UserPrincipal,) {
         val userId = user.getUser().id
         userService.deleteUser(userId)
     }
+
+
 }
