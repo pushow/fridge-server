@@ -13,6 +13,7 @@ class FamilyInvite(
     val id: Long = 0,
 
     val inviterName: String, // 초대한 사람 이름 (기록용)
+    val inviterEmail: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_family_id", nullable = false)

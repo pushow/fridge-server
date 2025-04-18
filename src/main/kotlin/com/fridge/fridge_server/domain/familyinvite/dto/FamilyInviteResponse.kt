@@ -8,6 +8,7 @@ data class FamilyInviteResponse(
     val fromFamilyGroupId: Long,
     val fromFamilyGroupName: String,
     val inviterName: String,
+    val inviterEmail: String,
     val invitedAt: LocalDateTime
 ) {
     companion object {
@@ -17,6 +18,7 @@ data class FamilyInviteResponse(
                 fromFamilyGroupId = invite.fromFamily.id,
                 fromFamilyGroupName = invite.fromFamily.name,
                 inviterName = invite.inviterName,
+                inviterEmail = invite.inviterEmail,
                 invitedAt = invite.invitedAt
             )
         }

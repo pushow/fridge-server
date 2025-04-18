@@ -9,7 +9,7 @@ import com.fridge.fridge_server.common.ErrorCode
 
 
 interface FamilyInviteUseCase {
-    fun sendInvite(fromFamilyId: Long, inviterName: String, toUserEmail: String) :FamilyInvite
+    fun sendInvite(fromFamilyId: Long, inviterName: String, inviterEmail: String, toUserEmail: String) :FamilyInvite
     fun getPendingInvitesForUser(userId: Long): List<FamilyInvite>
     fun acceptInvite(invitationId: Long, userId: Long)
     fun declineInvite(invitationId: Long, userId: Long)
@@ -21,7 +21,7 @@ class FamilyInviteService(
     private val familyGroupRepository: FamilyGroupRepository
 ) : FamilyInviteUseCase {
 
-    override fun sendInvite(fromFamilyId: Long, inviterName: String, toUserEmail: String): FamilyInvite{
+    override fun sendInvite(fromFamilyId: Long, inviterName: String, inviterEmail: String,toUserEmail: String): FamilyInvite{
         val family = findFamilyOrThrow(fromFamilyId)
         val toUser = findUserByEmailOrThrow(toUserEmail)
 
@@ -31,6 +31,7 @@ class FamilyInviteService(
 
         val invite = FamilyInvite(
             inviterName = inviterName,
+            inviterEmail = inviterEmail,
             fromFamily = family,
             toUser = toUser
         )
