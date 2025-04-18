@@ -12,8 +12,8 @@ class FamilyGroup(
     var name: String,
 
     @OneToMany(mappedBy = "familyGroup")
-    val users: List<User> = mutableListOf(),
+    val users: MutableList<User> = mutableListOf(),
 
     @OneToMany(mappedBy = "familyGroup", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val fridges: List<Fridge> = mutableListOf()
+    val fridges: MutableList<Fridge> = mutableListOf()
 )

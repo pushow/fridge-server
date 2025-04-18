@@ -9,7 +9,7 @@ import com.fridge.fridge_server.common.ErrorCode
 
 
 interface FamilyInviteUseCase {
-    fun sendInvite(fromFamilyId: Long, inviterName: String, toUserId: Long)
+    fun sendInvite(fromFamilyId: Long, inviterName: String, toUserEmail: String) :FamilyInvite
     fun getPendingInvitesForUser(userId: Long): List<FamilyInvite>
     fun acceptInvite(invitationId: Long, userId: Long)
     fun declineInvite(invitationId: Long, userId: Long)
@@ -21,9 +21,9 @@ class FamilyInviteService(
     private val familyGroupRepository: FamilyGroupRepository
 ) : FamilyInviteUseCase {
 
-    override fun sendInvite(fromFamilyId: Long, inviterName: String, toUserId: Long) {
+    override fun sendInvite(fromFamilyId: Long, inviterName: String, toUserEmail: String): FamilyInvite{
         val family = findFamilyOrThrow(fromFamilyId)
-        val toUser = findUserOrThrow(toUserId)
+        val toUser = findUserByEmailOrThrow(toUserEmail)
 
         if (inviteRepository.existsByToUserAndStatus(toUser, InviteStatus.PENDING)) {
             throw CustomException(ErrorCode.INVITE_ALREADY_EXISTS)
@@ -35,7 +35,7 @@ class FamilyInviteService(
             toUser = toUser
         )
 
-        inviteRepository.save(invite)
+        return inviteRepository.save(invite)
     }
 
     override fun getPendingInvitesForUser(userId: Long): List<FamilyInvite> {
@@ -70,9 +70,12 @@ class FamilyInviteService(
         inviteRepository.save(invite)
     }
 
-    // ✅ 공통 로직 추출
     private fun findUserOrThrow(userId: Long) =
         userRepository.findById(userId).orElseThrow { CustomException(ErrorCode.USER_NOT_FOUND) }
+
+    private fun findUserByEmailOrThrow(userEmail: String) =
+        userRepository.findByEmail(userEmail) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
+
 
     private fun findFamilyOrThrow(familyId: Long) =
         familyGroupRepository.findById(familyId).orElseThrow { CustomException(ErrorCode.FAMILY_NOT_FOUND) }

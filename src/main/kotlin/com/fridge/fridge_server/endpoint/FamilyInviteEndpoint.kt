@@ -2,6 +2,7 @@ package com.fridge.fridge_server.endpoint
 
 import com.fridge.fridge_server.domain.auth.CurrentUser.CurrentUser
 import com.fridge.fridge_server.domain.auth.UserPrincipal
+import com.fridge.fridge_server.domain.familyinvite.FamilyInvite
 import com.fridge.fridge_server.domain.familyinvite.FamilyInviteService
 import com.fridge.fridge_server.domain.familyinvite.dto.FamilyInviteRequest
 import com.fridge.fridge_server.domain.familyinvite.dto.FamilyInviteResponse
@@ -21,11 +22,14 @@ class FamilyInviteEndpoint(
     // 초대 전송
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun sendInvite(@RequestBody request: FamilyInviteRequest) {
-        familyInviteService.sendInvite(
-            fromFamilyId = request.fromFamilyGroupId,
-            inviterName = request.inviterName,
-            toUserId = request.toUserId
+    fun sendInvite(
+        @Parameter(hidden = true) @CurrentUser user: UserPrincipal,
+        @RequestParam(required = true) email: String,
+    ) : FamilyInvite {
+        return familyInviteService.sendInvite(
+            fromFamilyId = user.getFamilyId(),
+            inviterName = user.username,
+            toUserEmail = email
         )
     }
 
@@ -41,14 +45,20 @@ class FamilyInviteEndpoint(
     // 초대 수락
     @PostMapping("/{invitationId}/accept")
     @ResponseStatus(HttpStatus.OK)
-    fun acceptInvite(@PathVariable invitationId: Long, @RequestParam userId: Long) {
-        familyInviteService.acceptInvite(invitationId, userId)
+    fun acceptInvite(
+        @PathVariable invitationId: Long,
+        @Parameter(hidden = true) @CurrentUser user: UserPrincipal,
+    ) {
+        familyInviteService.acceptInvite(invitationId, user.getUser().id)
     }
 
     // 초대 거절
     @PostMapping("/{invitationId}/decline")
     @ResponseStatus(HttpStatus.OK)
-    fun declineInvite(@PathVariable invitationId: Long, @RequestParam userId: Long) {
-        familyInviteService.declineInvite(invitationId, userId)
+    fun declineInvite(
+        @PathVariable invitationId: Long,
+        @Parameter(hidden = true) @CurrentUser user: UserPrincipal,
+    ) {
+        familyInviteService.declineInvite(invitationId, user.getUser().id)
     }
 }
