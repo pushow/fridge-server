@@ -16,6 +16,7 @@ spring:
       enabled: true
       path: /h2-console
 
+
 #  ---mysql---
 #  datasource:
 #    url: jdbc:mysql://localhost:3307/fridge_db
@@ -25,11 +26,14 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+  sql:
+    init:
+      mode: never
 
 springdoc:
   swagger-ui:
@@ -42,3 +46,4 @@ jwt:
   secret: mysecretkeythatishardtoguessandlongenough123
   access-exp: 900000        # 15분 (ms 단위)
   refresh-exp: 1209600000   # 14일 (ms 단위)
+  enabled: false
