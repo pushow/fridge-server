@@ -13,7 +13,7 @@ enum class ErrorCode(
     // USER
     USER_NOT_FOUND("USR001", "사용자를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST),
     EMAIL_ALREADY_EXISTS("USR002", "이미 사용 중인 이메일입니다.", HttpStatus.BAD_REQUEST),
-
+    WRONG_PASSWORD("USR003", "현재 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     // FRIDGE
     FRIDGE_NOT_FOUND("FRD001", "냉장고를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST),
 
@@ -29,6 +29,6 @@ enum class ErrorCode(
 
     // AUTH
     LOGIN_FAILED("AUTH001", "이메일 또는 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
-    REFRESH_TOKEN_INVALID("AUTH002", "유효하지 않은 리프레시 토큰입니다.", HttpStatus.BAD_REQUEST),
-    REFRESH_TOKEN_EXPIRED("AUTH003", "리프레시 토큰이 만료되었습니다.", HttpStatus.BAD_REQUEST)
+    REFRESH_TOKEN_INVALID("AUTH002", "유효하지 않은 리프레시 토큰입니다.", HttpStatus.UNAUTHORIZED),
+    REFRESH_TOKEN_EXPIRED("AUTH003", "리프레시 토큰이 만료되었습니다.", HttpStatus.UNAUTHORIZED)
 }
