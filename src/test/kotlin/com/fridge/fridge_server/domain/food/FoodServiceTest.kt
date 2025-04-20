@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @SpringBootTest
 @Transactional
@@ -34,9 +35,10 @@ class FoodServiceTest @Autowired constructor(
         val food = foodService.createFood(
             CreateFoodRequest(
                 name = "계란",
-                expiryDate = LocalDate.now().plusDays(3),
+                expiryDate = LocalDateTime.now().plusDays(3),
                 count = 10,
                 storageType = StorageType.COLD,
+                icon = 0,
                 fridgeId = fridgeId
             )
         )
@@ -50,9 +52,9 @@ class FoodServiceTest @Autowired constructor(
     fun `냉장고에서 음식 리스트를 유통기한 오름차순으로 조회할 수 있다`() {
         val fridgeId = setup()
 
-        foodService.createFood(CreateFoodRequest("A", LocalDate.now().plusDays(5), 1, null, StorageType.COLD, fridgeId))
-        foodService.createFood(CreateFoodRequest("B", LocalDate.now().plusDays(2), 1, null, StorageType.COLD, fridgeId))
-        foodService.createFood(CreateFoodRequest("C", LocalDate.now().plusDays(10), 1, null, StorageType.COLD, fridgeId))
+        foodService.createFood(CreateFoodRequest("A", LocalDateTime.now().plusDays(5), 1, null, StorageType.COLD, 0,fridgeId))
+        foodService.createFood(CreateFoodRequest("B", LocalDateTime.now().plusDays(2), 1, null, StorageType.COLD, 0,fridgeId))
+        foodService.createFood(CreateFoodRequest("C", LocalDateTime.now().plusDays(10), 1, null, StorageType.COLD, 0,fridgeId))
 
         val foods = foodService.getFoodsByFridge(fridgeId)
 
@@ -65,16 +67,17 @@ class FoodServiceTest @Autowired constructor(
     fun `음식을 수정하면 정보가 반영된다`() {
         val fridgeId = setup()
         val food = foodService.createFood(
-            CreateFoodRequest("우유", LocalDate.now().plusDays(7), 2, "저지방", StorageType.COLD, fridgeId)
+            CreateFoodRequest("우유", LocalDateTime.now().plusDays(7), 2, "저지방", StorageType.COLD, 0,fridgeId)
         )
 
         val updated = foodService.updateFood(
             foodId = food.id,
             request = UpdateFoodRequest(
                 name = "저지방우유",
-                expiryDate = LocalDate.now().plusDays(5),
+                expiryDate = LocalDateTime.now().plusDays(5),
                 count = 3,
                 memo = "더 저지방",
+                icon = 0,
                 storageType = StorageType.COLD
             )
         )
@@ -88,7 +91,7 @@ class FoodServiceTest @Autowired constructor(
     fun `음식을 삭제하면 더 이상 조회되지 않는다`() {
         val fridgeId = setup()
         val food = foodService.createFood(
-            CreateFoodRequest("삭제음식", LocalDate.now().plusDays(3), 1, null, StorageType.COLD, fridgeId)
+            CreateFoodRequest("삭제음식", LocalDateTime.now().plusDays(3), 1, null, StorageType.COLD, 0,fridgeId)
         )
 
         foodService.deleteFood(food.id)
