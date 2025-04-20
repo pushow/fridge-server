@@ -18,6 +18,7 @@ data class UserLoginResponse(
 data class UserInfoResponse(
     val userId: Long,
     val userName: String,
+    val userProfile: Int,
     val email: String,
     val familyGroupId: Long,
     val familyGroupName: String,
@@ -32,11 +33,12 @@ data class UserFridgeInfo(
 data class UserSummaryResponse(
     val id: Long,
     val name: String,
-    val email: String
+    val email: String,
+    val profile: Int,
 ) {
     companion object {
         fun from(user: User): UserSummaryResponse {
-            return UserSummaryResponse(user.id, user.name, user.email)
+            return UserSummaryResponse(user.id, user.name, user.email, user.profile)
         }
     }
 }

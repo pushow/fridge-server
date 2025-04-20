@@ -13,9 +13,11 @@ interface UserUseCase {
     fun isEmailAvailable(email: String): Boolean
     fun createUser(dto: CreateUserRequest):User
     fun getUserInfo(userId: Long): UserInfoResponse
+    fun getUserNameByEmail(email:String): String
     fun updateUser(userId: Long, request: UpdateUserRequest): User
     fun changePassword(userId: Long, request: ChangePasswordRequest)
     fun deleteUser(userId: Long)
+    fun updateUserProfile(userId: Long, request: UpdateUserProfileRequest): User
 }
 
 @Service
@@ -61,11 +63,18 @@ class UserService(
         return UserInfoResponse(
             userId = user.id,
             userName = user.name,
+            userProfile = user.profile,
             email = user.email,
             familyGroupId = family.id,
             familyGroupName = family.name,
             fridges = fridges.map { UserFridgeInfo(it.id, it.name) }
         )
+    }
+
+    @Transactional(readOnly = true)
+    override fun getUserNameByEmail(email:String): String{
+        val user = userRepository.findByEmail(email)
+        return user?.email ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
     }
 
     @Transactional
@@ -86,6 +95,16 @@ class UserService(
             .orElseThrow { CustomException(ErrorCode.USER_NOT_FOUND) }
 
         user.name = request.name
+
+        return user
+    }
+
+    @Transactional
+    override fun updateUserProfile(userId: Long, request: UpdateUserProfileRequest): User {
+        val user = userRepository.findById(userId)
+            .orElseThrow { CustomException(ErrorCode.USER_NOT_FOUND) }
+
+        user.profile = request.profile
 
         return user
     }

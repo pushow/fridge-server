@@ -13,6 +13,8 @@ class User(
     val email: String,
     var password: String, // hashed
 
+    var profile: Int = 0,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "family_group_id")
     var familyGroup: FamilyGroup,  // 가족 그룹 참조

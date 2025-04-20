@@ -15,6 +15,10 @@ data class UpdateUserRequest(
     val name: String,
 )
 
+data class UpdateUserProfileRequest(
+    val profile: Int,
+)
+
 data class ChangePasswordRequest(
     val currentPassword: String,
     val newPassword: String

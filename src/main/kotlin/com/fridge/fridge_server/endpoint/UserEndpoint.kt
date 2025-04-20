@@ -21,6 +21,13 @@ class UserEndpoint(
         return userService.getUserInfo(userId)
     }
 
+    @GetMapping("/name")
+    fun getAnotherUserName(
+        @RequestParam userEmail: String,
+    ): String{
+        return userService.getUserNameByEmail(userEmail);
+    }
+
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     fun updateUser(
@@ -31,6 +38,18 @@ class UserEndpoint(
         val updated = userService.updateUser(userId, request)
         return UserLoginResponse.from(updated)
     }
+
+    @PutMapping("/profile")
+    @ResponseStatus(HttpStatus.OK)
+    fun updateUserProfile(
+        @Parameter(hidden = true) @CurrentUser user: UserPrincipal,
+        @RequestBody request: UpdateUserProfileRequest
+    ): UserLoginResponse {
+        val userId = user.getUser().id
+        val updated = userService.updateUserProfile(userId, request)
+        return UserLoginResponse.from(updated)
+    }
+
 
     @PostMapping("/change-password")
     @ResponseStatus(HttpStatus.OK)
