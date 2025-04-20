@@ -47,6 +47,7 @@ class FoodService(
             count = request.count,
             memo = request.memo,
             storageType = request.storageType ?: StorageType.COLD,
+            icon = request.icon,
             fridge = fridge
         )
         return foodRepository.save(food)

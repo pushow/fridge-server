@@ -9,6 +9,7 @@ data class CreateFoodRequest(
     val count: Long,
     val memo: String? = null,
     val storageType: StorageType? = null,  // null이면 기본값 COLD
+    val icon: Int,
     val fridgeId: Long
 )
 
