@@ -5,24 +5,24 @@ spring:
 
 
 #    H2 - for dev server
-  datasource:
-    url: jdbc:h2:file:./data/fridge-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+#  datasource:
+#    url: jdbc:h2:file:./data/fridge-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password:
+#
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
 
 
 #  ---mysql---
-#  datasource:
-#    url: jdbc:mysql://localhost:3307/fridge_db
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    username: root
-#    password: 1234
+  datasource:
+    url: jdbc:mysql://localhost:3307/fridge_db
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
 
   jpa:
     hibernate:

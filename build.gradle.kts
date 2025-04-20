@@ -33,8 +33,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-security")
 
 	// db
-	implementation("com.h2database:h2")
-	//implementation("com.mysql:mysql-connector-j:8.0.33")
+	//	implementation("com.h2database:h2")
+	implementation("com.mysql:mysql-connector-j:8.0.33")
 
 	// jwt
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
