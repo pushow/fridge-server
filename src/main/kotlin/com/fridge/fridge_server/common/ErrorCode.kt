@@ -26,6 +26,8 @@ enum class ErrorCode(
     // FAMILY_INVITE
     INVITE_ALREADY_EXISTS("INV001", "이미 초대가 존재합니다.", HttpStatus.BAD_REQUEST),
     INVITE_NOT_FOUND("INV002", "해당 초대를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST),
+    CANNOT_INVITE_SELF("INV003", "자기 자신은 초대하실 수 없습니다.", HttpStatus.CONFLICT),
+    ALREADY_IN_SAME_FAMILY("INV004", "이미 가족에 소속되어 있습니다.", HttpStatus.UNPROCESSABLE_ENTITY),
 
     // AUTH
     LOGIN_FAILED("AUTH001", "이메일 또는 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),

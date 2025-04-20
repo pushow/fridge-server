@@ -21,10 +21,21 @@ class FamilyInviteService(
     private val familyGroupRepository: FamilyGroupRepository
 ) : FamilyInviteUseCase {
 
-    override fun sendInvite(fromFamilyId: Long, inviterName: String, inviterEmail: String,toUserEmail: String): FamilyInvite{
+    override fun sendInvite(fromFamilyId: Long, inviterName: String, inviterEmail: String, toUserEmail: String): FamilyInvite {
         val family = findFamilyOrThrow(fromFamilyId)
         val toUser = findUserByEmailOrThrow(toUserEmail)
 
+        // 1. 자기 자신에게 초대 보내는 경우
+        if (toUser.email == inviterEmail) {
+            throw CustomException(ErrorCode.CANNOT_INVITE_SELF)
+        }
+
+        // 2. 이미 같은 가족에 속한 경우
+        if (toUser.familyGroup.id == fromFamilyId) {
+            throw CustomException(ErrorCode.ALREADY_IN_SAME_FAMILY)
+        }
+
+        // 3. 이미 초대가 존재하는 경우
         if (inviteRepository.existsByToUserAndStatus(toUser, InviteStatus.PENDING)) {
             throw CustomException(ErrorCode.INVITE_ALREADY_EXISTS)
         }
@@ -38,6 +49,7 @@ class FamilyInviteService(
 
         return inviteRepository.save(invite)
     }
+
 
     override fun getPendingInvitesForUser(userId: Long): List<FamilyInvite> {
         val user = findUserOrThrow(userId)

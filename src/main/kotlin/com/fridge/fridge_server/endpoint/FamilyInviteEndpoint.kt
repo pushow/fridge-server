@@ -42,8 +42,8 @@ class FamilyInviteEndpoint(
         val invites = familyInviteService.getPendingInvitesForUser(userId)
         return invites.map { FamilyInviteResponse.from(it) }
     }
-
     // 초대 수락
+
     @PostMapping("/{invitationId}/accept")
     @ResponseStatus(HttpStatus.OK)
     fun acceptInvite(
