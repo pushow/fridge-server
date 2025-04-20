@@ -5,6 +5,11 @@
 
 ---
 
+## 🔗 관련 링크
+
+- 📱 프론트엔드 Flutter 앱 GitHub: [https://github.com/EstelLa-83/FridgeHelper](https://github.com/EstelLa-83/FridgeHelper)
+
+---
 ## 📱 주요 기능
 
 ### 사용자
