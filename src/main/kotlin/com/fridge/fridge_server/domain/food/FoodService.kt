@@ -60,6 +60,7 @@ class FoodService(
         food.count = request.count
         food.memo = request.memo
         food.storageType = request.storageType
+        food.icon = request.icon
         return food
     }
 

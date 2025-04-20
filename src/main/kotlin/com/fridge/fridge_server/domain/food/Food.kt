@@ -2,7 +2,7 @@ package com.fridge.fridge_server.domain.food
 
 import com.fridge.fridge_server.domain.fridge.Fridge
 import jakarta.persistence.*
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 enum class StorageType {
     COLD,         // 냉장
@@ -16,10 +16,11 @@ class Food(
     val id: Long = 0,
 
     var name: String,
-    var expiryDate: LocalDate,
+    var expiryDate: LocalDateTime,
     var count: Long,
     var memo: String? = null,
 
+    var icon: Int = 0,
     @Enumerated(EnumType.STRING)  // enum 값을 문자열로 저장
     var storageType: StorageType,
 
